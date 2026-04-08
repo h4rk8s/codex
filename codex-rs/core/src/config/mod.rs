@@ -302,6 +302,9 @@ pub struct Config {
     /// Enable ASCII animations and shimmer effects in the TUI.
     pub animations: bool,
 
+    /// Animate the spinner in the terminal window/tab title.
+    pub animated_terminal_title: bool,
+
     /// Show startup tooltips in the TUI welcome screen.
     pub show_tooltips: bool,
 
@@ -2072,6 +2075,7 @@ impl Config {
                 .map(|t| t.notification_method)
                 .unwrap_or_default(),
             animations: cfg.tui.as_ref().map(|t| t.animations).unwrap_or(true),
+            animated_terminal_title: cfg.tui.as_ref().map(|t| t.animated_terminal_title).unwrap_or(true),
             show_tooltips: cfg.tui.as_ref().map(|t| t.show_tooltips).unwrap_or(true),
             model_availability_nux: cfg
                 .tui

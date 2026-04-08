@@ -566,12 +566,16 @@ impl ChatWidget {
     }
 
     pub(super) fn terminal_title_spinner_text_at(&self, now: Instant) -> Option<String> {
-        if !self.config.animations {
+        if !self.terminal_title_has_active_progress() {
             return None;
         }
 
-        if !self.terminal_title_has_active_progress() {
-            return None;
+        if !self.config.animations || !self.config.animated_terminal_title {
+            // Use a static indicator instead of an animated spinner.
+            // Animated OSC 2 (set-window-title) writes can trigger
+            // cursor-shape re-evaluation on macOS, causing mouse-pointer
+            // flicker (I-beam ↔ arrow) in Terminal.app, Ghostty, etc.
+            return Some("●".to_string());
         }
 
         Some(self.terminal_title_spinner_frame_at(now).to_string())
@@ -599,6 +603,7 @@ impl ChatWidget {
 
     pub(super) fn should_animate_terminal_title_spinner(&self) -> bool {
         self.config.animations
+            && self.config.animated_terminal_title
             && self.terminal_title_uses_spinner()
             && self.terminal_title_has_active_progress()
     }
@@ -608,6 +613,7 @@ impl ChatWidget {
         selections: &StatusSurfaceSelections,
     ) -> bool {
         self.config.animations
+            && self.config.animated_terminal_title
             && selections
                 .terminal_title_items
                 .contains(&TerminalTitleItem::Spinner)

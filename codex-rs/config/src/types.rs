@@ -523,6 +523,15 @@ pub struct Tui {
     #[serde(default)]
     pub status_line: Option<Vec<String>>,
 
+    /// Animate the spinner in the terminal window/tab title.
+    /// When `false`, a static indicator is shown instead of an animated
+    /// spinner.  This avoids frequent `OSC 2` (set-title) writes that can
+    /// cause mouse-pointer flicker on some terminals (macOS Terminal.app,
+    /// Ghostty, etc.).
+    /// Defaults to `true`.
+    #[serde(default = "default_true")]
+    pub animated_terminal_title: bool,
+
     /// Ordered list of terminal title item identifiers.
     ///
     /// When set, the TUI renders the selected items into the terminal window/tab title.
